@@ -8,7 +8,10 @@ from pathlib import Path
 # Add app directory to path
 sys.path.insert(0, str(Path(__file__).parent))
 
-from app import app, socketio, config
+from app import socketio, config
+from app import app as flask_app  # Explicit naming to avoid confusion
+# Import routes (must be after app initialization)
+import app.main
 
 logger = logging.getLogger(__name__)
 
@@ -27,16 +30,19 @@ def main():
     try:
         # Run the Flask-SocketIO server
         socketio.run(
-            app,
+            flask_app,
             host=config.HOST,
             port=config.PORT,
             debug=config.DEBUG,
+            use_reloader=config.DEBUG,
             allow_unsafe_werkzeug=True
         )
     except KeyboardInterrupt:
         logger.info("Shutting down gracefully...")
     except Exception as e:
         logger.error(f"Error starting server: {e}")
+        import traceback
+        traceback.print_exc()
         sys.exit(1)
 
 
