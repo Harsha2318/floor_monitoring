@@ -7,19 +7,15 @@ from typing import List, Tuple, Optional
 import logging
 from dataclasses import dataclass
 
-try:
-    import mediapipe as mp
-    MEDIAPIPE_AVAILABLE = True
-except ImportError:
-    MEDIAPIPE_AVAILABLE = False
-    logging.warning("MediaPipe not available")
+# Don't import MediaPipe at module level - only when needed
+MEDIAPIPE_AVAILABLE = False
+YOLO_AVAILABLE = False
 
 try:
     from ultralytics import YOLO
     YOLO_AVAILABLE = True
 except ImportError:
-    YOLO_AVAILABLE = False
-    logging.warning("YOLO not available")
+    pass
 
 from app import config
 
@@ -56,7 +52,10 @@ class DetectionEngine:
     
     def _init_mediapipe(self):
         """Initialize MediaPipe Pose detection"""
+        global MEDIAPIPE_AVAILABLE
         try:
+            import mediapipe as mp
+            MEDIAPIPE_AVAILABLE = True
             self.mp_pose = mp.solutions.pose
             self.pose = self.mp_pose.Pose(
                 static_image_mode=False,
@@ -67,6 +66,7 @@ class DetectionEngine:
             logger.info("MediaPipe Pose detector initialized")
         except Exception as e:
             logger.error(f"Failed to initialize MediaPipe: {e}")
+            MEDIAPIPE_AVAILABLE = False
             self._init_opencv()
     
     def _init_yolo(self):
