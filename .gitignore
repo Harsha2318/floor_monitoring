@@ -1,0 +1,84 @@
+# .gitignore for Employee Monitoring System
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
+venv/
+env/
+ENV/
+.venv
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Logs
+*.log
+data/logs/
+
+# Face images (sensitive data)
+data/faces/
+!data/faces/.gitkeep
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# Environment variables
+.env
+.env.local
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+
+# Models (too large for git)
+models/*.pt
+models/*.pth
+models/*.onnx
+!models/.gitkeep
+
+# Data directory (except structure)
+data/monitoring.db
+data/backup/
+!data/.gitkeep
+
+# Static compiled files
+static/dist/
+node_modules/

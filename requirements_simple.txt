@@ -1,0 +1,29 @@
+# Simplified Requirements - No strict version pinning
+# Installs latest compatible versions automatically
+
+# Web Framework
+Flask
+Flask-SocketIO
+Flask-CORS
+
+# Computer Vision
+opencv-python
+numpy
+
+# Optional: AI Detection (comment out if installation fails)
+# mediapipe
+# ultralytics
+
+# Image Processing
+Pillow
+scipy
+
+# Database
+SQLAlchemy
+
+# Testing
+pytest
+pytest-cov
+
+# Alerts
+plyer

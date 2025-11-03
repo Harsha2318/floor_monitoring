@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Monitoring System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-video"></i> Employee Monitoring System
+            </a>
+            <div class="d-flex align-items-center">
+                <span class="badge bg-success me-3" id="systemStatus">System Offline</span>
+                <button class="btn btn-sm btn-success me-2" id="startBtn">
+                    <i class="fas fa-play"></i> Start
+                </button>
+                <button class="btn btn-sm btn-danger" id="stopBtn" disabled>
+                    <i class="fas fa-stop"></i> Stop
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid mt-4">
+        <!-- Statistics Row -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card text-white bg-primary">
+                    <div class="card-body">
+                        <h5 class="card-title">Currently Present</h5>
+                        <h2 id="currentlyPresent">0</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-white bg-success">
+                    <div class="card-body">
+                        <h5 class="card-title">Total Entries Today</h5>
+                        <h2 id="totalEntries">0</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-white bg-warning">
+                    <div class="card-body">
+                        <h5 class="card-title">Active Cameras</h5>
+                        <h2 id="activeCameras">0</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-white bg-danger">
+                    <div class="card-body">
+                        <h5 class="card-title">Unacknowledged Alerts</h5>
+                        <h2 id="unacknowledgedAlerts">0</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <ul class="nav nav-tabs" id="mainTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="live-tab" data-bs-toggle="tab" data-bs-target="#live" type="button">
+                    <i class="fas fa-video"></i> Live View
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="presence-tab" data-bs-toggle="tab" data-bs-target="#presence" type="button">
+                    <i class="fas fa-users"></i> Presence Status
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="alerts-tab" data-bs-toggle="tab" data-bs-target="#alerts" type="button">
+                    <i class="fas fa-bell"></i> Alerts
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="history-tab" data-bs-toggle="tab" data-bs-target="#history" type="button">
+                    <i class="fas fa-history"></i> History
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="config-tab" data-bs-toggle="tab" data-bs-target="#config" type="button">
+                    <i class="fas fa-cog"></i> Configuration
+                </button>
+            </li>
+        </ul>
+
+        <div class="tab-content" id="mainTabContent">
+            <!-- Live View Tab -->
+            <div class="tab-pane fade show active" id="live" role="tabpanel">
+                <div class="row mt-3" id="cameraGrid">
+                    <!-- Camera feeds will be added dynamically -->
+                </div>
+            </div>
+
+            <!-- Presence Status Tab -->
+            <div class="tab-pane fade" id="presence" role="tabpanel">
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h5>Currently Present Employees</h5>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-striped" id="presenceTable">
+                            <thead>
+                                <tr>
+                                    <th>Tracking ID</th>
+                                    <th>Employee</th>
+                                    <th>Camera</th>
+                                    <th>Entry Time</th>
+                                    <th>Duration</th>
+                                </tr>
+                            </thead>
+                            <tbody id="presenceTableBody">
+                                <!-- Presence data will be added dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Alerts Tab -->
+            <div class="tab-pane fade" id="alerts" role="tabpanel">
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h5>Absence Alerts</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="alertsList">
+                            <!-- Alerts will be added dynamically -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- History Tab -->
+            <div class="tab-pane fade" id="history" role="tabpanel">
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h5>Presence History</h5>
+                        <div class="row mt-2">
+                            <div class="col-md-4">
+                                <input type="date" class="form-control" id="startDate">
+                            </div>
+                            <div class="col-md-4">
+                                <input type="date" class="form-control" id="endDate">
+                            </div>
+                            <div class="col-md-4">
+                                <button class="btn btn-primary" id="filterHistory">
+                                    <i class="fas fa-filter"></i> Filter
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-striped" id="historyTable">
+                            <thead>
+                                <tr>
+                                    <th>Employee</th>
+                                    <th>Camera</th>
+                                    <th>Entry Time</th>
+                                    <th>Exit Time</th>
+                                    <th>Duration (min)</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="historyTableBody">
+                                <!-- History data will be added dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Configuration Tab -->
+            <div class="tab-pane fade" id="config" role="tabpanel">
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>Add Camera</h5>
+                            </div>
+                            <div class="card-body">
+                                <form id="addCameraForm">
+                                    <div class="mb-3">
+                                        <label class="form-label">Camera ID</label>
+                                        <input type="text" class="form-control" id="cameraId" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Camera Name</label>
+                                        <input type="text" class="form-control" id="cameraName" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Type</label>
+                                        <select class="form-control" id="cameraType">
+                                            <option value="usb">USB Camera</option>
+                                            <option value="ip">IP Camera</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Source (Device ID or RTSP URL)</label>
+                                        <input type="text" class="form-control" id="cameraSource" required>
+                                        <small class="text-muted">For USB: 0, 1, 2, etc. For IP: rtsp://url</small>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Add Camera</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>System Settings</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <label class="form-label">Detection Model</label>
+                                    <input type="text" class="form-control" id="detectionModel" readonly>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Absence Timeout (minutes)</label>
+                                    <input type="number" class="form-control" id="absenceTimeout" readonly>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alert Sound -->
+    <audio id="alertSound" preload="auto">
+        <source src="{{ url_for('static', filename='sounds/alert.mp3') }}" type="audio/mpeg">
+    </audio>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
