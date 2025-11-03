@@ -183,12 +183,13 @@ class DetectionEngine:
         scale = 0.5
         small_frame = cv2.resize(frame, None, fx=scale, fy=scale)
         
-        # Detect people
+        # Detect people with more sensitive settings
         boxes, weights = self.hog.detectMultiScale(
             small_frame,
-            winStride=(8, 8),
-            padding=(8, 8),
-            scale=1.05
+            winStride=(4, 4),  # Smaller stride for better detection (was 8,8)
+            padding=(16, 16),  # More padding to catch people at edges (was 8,8)
+            scale=1.03,  # Smaller scale step for more thorough search (was 1.05)
+            hitThreshold=0  # Lower threshold for more detections (default is 0)
         )
         
         # Process detections

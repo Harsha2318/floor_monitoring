@@ -25,7 +25,7 @@ CAMERA_CONFIGS = {
 }
 
 # Detection Settings
-DETECTION_CONFIDENCE = 0.5  # Minimum confidence for person detection
+DETECTION_CONFIDENCE = 0.2  # Minimum confidence for person detection (lowered for better sensitivity)
 # Detection model to use
 # Options: 'mediapipe' (recommended), 'yolo' (best accuracy), 'opencv' (fastest, fallback)
 # Set to 'opencv' if MediaPipe installation fails

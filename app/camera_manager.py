@@ -52,7 +52,8 @@ class CameraStream:
             else:
                 source = self.camera_info.source
             
-            self.capture = cv2.VideoCapture(source)
+            # Use DirectShow backend on Windows for better camera access
+            self.capture = cv2.VideoCapture(source, cv2.CAP_DSHOW)
             
             if not self.capture.isOpened():
                 logger.error(f"Failed to open camera: {self.camera_info.name}")
